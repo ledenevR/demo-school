@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0c0d10">
+  <title>Что вы освоите на курсе</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --color-bg: #0c0d10;
+  --color-surface: #121419;
+  --color-surface-hover: #171a20;
+  --color-border: rgba(255, 255, 255, 0.11);
+  --color-text: #f4f5f2;
+  --color-muted: #969b94;
+  --color-accent: #befd35;
+  --container-width: 1180px;
+  --card-radius: 22px;
+  --card-transition: 660ms cubic-bezier(0.22, 0.78, 0.18, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+}
+
+.program {
+  position: relative;
+  overflow: hidden;
+  min-height: 100svh;
+  padding: clamp(72px, 9vw, 128px) 20px;
+  isolation: isolate;
+}
+
+.program::before {
+  position: absolute;
+  z-index: -1;
+  top: -180px;
+  left: 50%;
+  width: min(1000px, 100vw);
+  height: 420px;
+  background: radial-gradient(circle, rgba(190, 253, 53, 0.09), transparent 66%);
+  content: "";
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.program__container {
+  width: min(100%, var(--container-width));
+  margin-inline: auto;
+}
+
+.program__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  gap: clamp(32px, 7vw, 96px);
+  align-items: end;
+  margin-bottom: clamp(42px, 6vw, 68px);
+}
+
+.program__title {
+  margin: 0;
+  font-size: clamp(2.8rem, 6.7vw, 6.2rem);
+  font-weight: 750;
+  letter-spacing: -0.072em;
+  line-height: 0.9;
+}
+
+.program__title span {
+  display: block;
+  color: var(--color-accent);
+}
+
+.program__lead {
+  max-width: 430px;
+  margin: 0 0 4px;
+  color: var(--color-muted);
+  font-size: clamp(0.98rem, 1.4vw, 1.08rem);
+  line-height: 1.65;
+}
+
+.modules {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.module-card {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 310px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--card-radius);
+  background: transparent;
+  cursor: pointer;
+  perspective: 1200px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.module-card__inner {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform-style: preserve-3d;
+  transition: transform var(--card-transition);
+  will-change: transform;
+}
+
+.module-card.is-flipped .module-card__inner {
+  transform: rotateY(180deg);
+}
+
+.module-card__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.module-card__face--front {
+  background: var(--color-surface);
+  transition: border-color 260ms ease, background-color 260ms ease;
+}
+
+.module-card__face--front::before {
+  position: absolute;
+  inset: auto -16% -44% 26%;
+  height: 72%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(190, 253, 53, 0.09), transparent 68%);
+  content: "";
+  pointer-events: none;
+  transition: transform 500ms ease, opacity 500ms ease;
+}
+
+.module-card__face--back {
+  justify-content: space-between;
+  background: var(--color-accent);
+  color: #0d1009;
+  transform: rotateY(180deg);
+}
+
+.module-card__toggle {
+  position: relative;
+  align-self: flex-end;
+  width: 34px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+}
+
+.module-card__toggle::before,
+.module-card__toggle::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 1px;
+  background: var(--color-muted);
+  content: "";
+  transform: translate(-50%, -50%);
+  transition: background-color 260ms ease, transform 260ms ease;
+}
+
+.module-card__toggle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.module-card__icon {
+  position: relative;
+  display: grid;
+  width: 68px;
+  aspect-ratio: 1;
+  margin-top: auto;
+  place-items: center;
+  border-radius: 18px;
+  background: rgba(190, 253, 53, 0.08);
+  color: var(--color-accent);
+  transition: transform 420ms cubic-bezier(0.22, 0.8, 0.2, 1), background-color 260ms ease;
+}
+
+.module-card__icon svg {
+  width: 37px;
+  height: 37px;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.module-card__title {
+  position: relative;
+  max-width: 280px;
+  margin-top: 22px;
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  text-align: left;
+}
+
+.module-card__back-title {
+  max-width: 260px;
+  font-size: 0.82rem;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+  text-align: left;
+}
+
+.module-card__description {
+  display: block;
+  max-width: 325px;
+  margin-block: auto;
+  font-size: clamp(1.06rem, 1.55vw, 1.26rem);
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  line-height: 1.42;
+  text-align: left;
+}
+
+.module-card__close {
+  align-self: flex-start;
+  border-bottom: 1px solid rgba(13, 16, 9, 0.42);
+  color: rgba(13, 16, 9, 0.66);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.module-card:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 5px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .module-card:not(.is-flipped):hover .module-card__inner {
+    transform: translateY(-7px) rotateX(1.4deg) rotateY(-1.4deg);
+  }
+
+  .module-card.is-flipped:hover .module-card__inner {
+    transform: translateY(-7px) rotateX(1.4deg) rotateY(178.6deg);
+  }
+
+  .module-card:hover .module-card__face--front {
+    border-color: rgba(190, 253, 53, 0.32);
+    background: var(--color-surface-hover);
+  }
+
+  .module-card:hover .module-card__face--front::before {
+    opacity: 1.4;
+    transform: scale(1.16);
+  }
+
+  .module-card:hover .module-card__icon {
+    background: rgba(190, 253, 53, 0.13);
+    transform: rotate(-5deg) scale(1.05);
+  }
+
+  .module-card:hover .module-card__toggle::before,
+  .module-card:hover .module-card__toggle::after {
+    background: var(--color-accent);
+  }
+}
+
+@media (max-width: 980px) {
+  .program__header {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .program__lead {
+    max-width: 620px;
+  }
+
+  .modules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .program {
+    padding: 64px 14px 80px;
+  }
+
+  .program__header {
+    margin-bottom: 34px;
+  }
+
+  .program__title {
+    font-size: clamp(2.65rem, 13vw, 4.4rem);
+    letter-spacing: -0.062em;
+  }
+
+  .program__lead {
+    font-size: 0.96rem;
+  }
+
+  .modules {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .module-card {
+    min-height: 270px;
+  }
+
+  .module-card__face {
+    padding: 21px;
+  }
+
+  .module-card__icon {
+    width: 62px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+</style>
+</head>
+<body>
+  <main>
+    <section class="program" aria-labelledby="program-title">
+      <div class="program__container">
+        <header class="program__header">
+          <h2 class="program__title" id="program-title">
+            Что вы освоите
+            <span>на курсе</span>
+          </h2>
+
+          <p class="program__lead">
+            От первых принципов до собственной работы в портфолио. Нажмите на карточку,
+            чтобы посмотреть, чему посвящён каждый блок обучения.
+          </p>
+        </header>
+
+        <div class="modules" aria-label="Блоки обучения">
+          <button class="module-card" type="button" aria-pressed="false" aria-label="Основы дизайна. Открыть описание">
+            <span class="module-card__inner">
+              <span class="module-card__face module-card__face--front" aria-hidden="false">
+                <span class="module-card__toggle" aria-hidden="true"></span>
+                <span class="module-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="15" />
+                    <circle cx="24" cy="24" r="6" />
+                    <path d="M24 9v9M39 24h-9M24 39v-9M9 24h9" />
+                  </svg>
+                </span>
+                <strong class="module-card__title">Основы дизайна</strong>
+              </span>
+
+              <span class="module-card__face module-card__face--back" aria-hidden="true">
+                <strong class="module-card__back-title">Основы дизайна</strong>
+                <span class="module-card__description">
+                  Разберётесь, из чего складывается сильная работа, как дизайнер принимает решения и почему один макет выглядит убедительно, а другой нет.
+                </span>
+                <span class="module-card__close" aria-hidden="true">Закрыть</span>
+              </span>
+            </span>
+          </button>
+
+          <button class="module-card" type="button" aria-pressed="false" aria-label="Типографика. Открыть описание">
+            <span class="module-card__inner">
+              <span class="module-card__face module-card__face--front" aria-hidden="false">
+                <span class="module-card__toggle" aria-hidden="true"></span>
+                <span class="module-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none">
+                    <path d="M8 12h32M14 12v24M34 12v24M14 25h20" />
+                    <path d="M9 36h10M29 36h10" />
+                  </svg>
+                </span>
+                <strong class="module-card__title">Типографика</strong>
+              </span>
+
+              <span class="module-card__face module-card__face--back" aria-hidden="true">
+                <strong class="module-card__back-title">Типографика</strong>
+                <span class="module-card__description">
+                  Научитесь подбирать и сочетать шрифты, выстраивать иерархию текста и делать макеты, которые легко читать на экране и в печати.
+                </span>
+                <span class="module-card__close" aria-hidden="true">Закрыть</span>
+              </span>
+            </span>
+          </button>
+
+          <button class="module-card" type="button" aria-pressed="false" aria-label="Композиция. Открыть описание">
+            <span class="module-card__inner">
+              <span class="module-card__face module-card__face--front" aria-hidden="false">
+                <span class="module-card__toggle" aria-hidden="true"></span>
+                <span class="module-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none">
+                    <rect x="8" y="8" width="13" height="13" rx="2" />
+                    <circle cx="33" cy="15" r="7" />
+                    <path d="m9 39 8-13 8 13H9Z" />
+                    <rect x="29" y="27" width="11" height="11" rx="2" />
+                  </svg>
+                </span>
+                <strong class="module-card__title">Композиция</strong>
+              </span>
+
+              <span class="module-card__face module-card__face--back" aria-hidden="true">
+                <strong class="module-card__back-title">Композиция</strong>
+                <span class="module-card__description">
+                  Освоите баланс, ритм, акценты и работу с пространством, чтобы собирать цельные макеты, а не просто расставлять элементы по экрану.
+                </span>
+                <span class="module-card__close" aria-hidden="true">Закрыть</span>
+              </span>
+            </span>
+          </button>
+
+          <button class="module-card" type="button" aria-pressed="false" aria-label="Цвет и стилистика. Открыть описание">
+            <span class="module-card__inner">
+              <span class="module-card__face module-card__face--front" aria-hidden="false">
+                <span class="module-card__toggle" aria-hidden="true"></span>
+                <span class="module-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none">
+                    <path d="M24 7c7 8 12 14 12 22a12 12 0 0 1-24 0c0-8 5-14 12-22Z" />
+                    <path d="M17 30c1 4 3 6 7 7" />
+                  </svg>
+                </span>
+                <strong class="module-card__title">Цвет и стилистика</strong>
+              </span>
+
+              <span class="module-card__face module-card__face--back" aria-hidden="true">
+                <strong class="module-card__back-title">Цвет и стилистика</strong>
+                <span class="module-card__description">
+                  Поймёте, как собирать палитры, работать с контрастом и передавать нужное настроение через цвет и единый визуальный язык.
+                </span>
+                <span class="module-card__close" aria-hidden="true">Закрыть</span>
+              </span>
+            </span>
+          </button>
+
+          <button class="module-card" type="button" aria-pressed="false" aria-label="Графические инструменты. Открыть описание">
+            <span class="module-card__inner">
+              <span class="module-card__face module-card__face--front" aria-hidden="false">
+                <span class="module-card__toggle" aria-hidden="true"></span>
+                <span class="module-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none">
+                    <path d="m11 36 5-14L34 7l7 7-15 18-15 4Z" />
+                    <path d="m16 22 10 10M31 10l7 7M11 36l8-7" />
+                  </svg>
+                </span>
+                <strong class="module-card__title">Графические инструменты</strong>
+              </span>
+
+              <span class="module-card__face module-card__face--back" aria-hidden="true">
+                <strong class="module-card__back-title">Графические инструменты</strong>
+                <span class="module-card__description">
+                  Перейдёте от теории к практике: научитесь уверенно работать в программах, собирать макеты и подготавливать материалы к публикации.
+                </span>
+                <span class="module-card__close" aria-hidden="true">Закрыть</span>
+              </span>
+            </span>
+          </button>
+
+          <button class="module-card" type="button" aria-pressed="false" aria-label="Финальный проект. Открыть описание">
+            <span class="module-card__inner">
+              <span class="module-card__face module-card__face--front" aria-hidden="false">
+                <span class="module-card__toggle" aria-hidden="true"></span>
+                <span class="module-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none">
+                    <path d="m24 8 4.6 9.4L39 19l-7.5 7.3 1.8 10.3L24 31.7l-9.3 4.9 1.8-10.3L9 19l10.4-1.6L24 8Z" />
+                  </svg>
+                </span>
+                <strong class="module-card__title">Финальный проект</strong>
+              </span>
+
+              <span class="module-card__face module-card__face--back" aria-hidden="true">
+                <strong class="module-card__back-title">Финальный проект</strong>
+                <span class="module-card__description">
+                  Выполните полноценную дизайнерскую задачу по брифу, получите обратную связь и оформите результат как первую сильную работу в портфолио.
+                </span>
+                <span class="module-card__close" aria-hidden="true">Закрыть</span>
+              </span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+const cards = document.querySelectorAll('.module-card');
+
+cards.forEach((card) => {
+  const front = card.querySelector('.module-card__face--front');
+  const back = card.querySelector('.module-card__face--back');
+
+  card.addEventListener('click', () => {
+    const isFlipped = card.classList.toggle('is-flipped');
+    const currentLabel = card.getAttribute('aria-label');
+    const nextAction = isFlipped ? 'Закрыть описание' : 'Открыть описание';
+
+    card.setAttribute('aria-pressed', String(isFlipped));
+    card.setAttribute(
+      'aria-label',
+      currentLabel.replace(/Открыть описание|Закрыть описание/, nextAction)
+    );
+
+    front.setAttribute('aria-hidden', String(isFlipped));
+    back.setAttribute('aria-hidden', String(!isFlipped));
+  });
+});
+
+</script>
+</body>
+</html>
